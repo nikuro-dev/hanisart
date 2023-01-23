@@ -1,6 +1,9 @@
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.urls import reverse
+from django.utils.text import slugify
+
 # Create your models here.
 
 class Post (models.Model):
@@ -18,6 +21,11 @@ class Post (models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length= 2, choices= Status.choices, default= Status.DRAFT)
 
+    def get_absolute_url(self):
+        return reverse("post_detail", kwargs={"slug": self.slug})
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Post, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-publish']
@@ -26,10 +34,10 @@ class Post (models.Model):
         ]
 
     def __str__(self):
-        return self.title
+        return  f"{self.title}"
 
 class Comment(models.Model):
-    post = name = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)    
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)    
     name = models.CharField(max_length=80)
     email =models.EmailField(max_length=254)
     body = models.TextField()
