@@ -14,9 +14,9 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('post', 'name', 'email', 'created_on', 'active')
-    list_filter= ('active', 'created_on')
-    search_fields = ('name', 'email', 'body')
+    list_display = ('title', 'slug', 'author','created', 'publish', 'status')
+    list_filter= ('created', 'status', 'publish', 'author')
+    search_fields = ['title', 'body']
     prepopulated_fields = {'slug':('title',)}
     ordering = ['status', 'publish']
     date_hierarchy = 'publish'
